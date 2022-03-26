@@ -10,7 +10,7 @@ import SimpleLineChart from "./components/charts/SimpleLineChart";
 import TimeSlider from "./components/TimeSlider";
 import TimePeriod from "./components/TimePeriod";
 import TimeRangeForm from "./components/TimeRangeForm";
-import {calculateTotalRetirementWithMonthlyContribution } from './calculations/calcHelper';
+import { calculateTotalRetirementWithMonthlyContribution } from "./calculations/calcHelper";
 
 function App() {
   const [userValues, setUserValues] = useState({
@@ -19,11 +19,21 @@ function App() {
     deposit: 100,
   });
   const [timeRangeValues, setTimeRangeValues] = useState([
-    { start: userValues.age, end: userValues.retirementTarget, period: 1, monthlyContribution: 200,
-      rate: 0.08, investmentData: calculateTotalRetirementWithMonthlyContribution(Number(userValues.retirementTarget) - Number(userValues.age), 200, userValues.deposit, 0.08)
-    }
+    {
+      start: userValues.age,
+      end: userValues.retirementTarget,
+      period: 1,
+      monthlyContribution: 200,
+      rate: 0.08,
+      investmentData: calculateTotalRetirementWithMonthlyContribution(
+        Number(userValues.retirementTarget) - Number(userValues.age),
+        200,
+        userValues.deposit,
+        0.08
+      ),
+    },
   ]);
-  const [financialData, setFinancialData] = useState([])
+  const [financialData, setFinancialData] = useState([]);
   const investmentYears = userValues.retirementTarget - userValues.age;
 
   // const financialData = calculateTotalRetirementWithMonthlyContribution(
@@ -38,13 +48,19 @@ function App() {
     let updatedFinancialData = [];
     timeRangeValues.forEach((r) => {
       const periodInvestmentYears = Number(r.end) - Number(r.start);
-      const investmentData = calculateTotalRetirementWithMonthlyContribution(periodInvestmentYears, r.monthlyContribution, initialInvestment, r.rate, updatedFinancialData[updatedFinancialData.length - 1]);
+      const investmentData = calculateTotalRetirementWithMonthlyContribution(
+        periodInvestmentYears,
+        r.monthlyContribution,
+        initialInvestment,
+        r.rate,
+        updatedFinancialData[updatedFinancialData.length - 1]
+      );
       initialInvestment = investmentData[investmentData.length - 1].total;
-      console.log('investmentData', investmentData);
+      console.log("investmentData", investmentData);
       updatedFinancialData = [...updatedFinancialData, ...investmentData];
-    })
+    });
     setFinancialData(updatedFinancialData);
-  }, [timeRangeValues])
+  }, [timeRangeValues]);
 
   // console.log('financialData', financialData)
 
@@ -54,7 +70,8 @@ function App() {
   );
 
   const handleSubmitUserValueForm = (formValues) => setUserValues(formValues);
-  const handleSubmitTimeRangeValuesForm = (formValues) => setTimeRangeValues(formValues);
+  const handleSubmitTimeRangeValuesForm = (formValues) =>
+    setTimeRangeValues(formValues);
 
   // console.log(timeRangeValues);
   return (
@@ -64,19 +81,22 @@ function App() {
           userValues={userValues}
           handleSubmit={handleSubmitUserValueForm}
         />
-        <TimeRangeForm userValues={userValues} timeRangeValues={timeRangeValues} handleSubmit={handleSubmitTimeRangeValuesForm}/>
+        <TimeRangeForm
+          userValues={userValues}
+          timeRangeValues={timeRangeValues}
+          handleSubmit={handleSubmitTimeRangeValuesForm}
+        />
       </div>
       <div style={{ flex: 1 }}>
-<div>Final: {financialData[financialData.length - 1]?.total}</div>
-{!!financialData.length && (
-  <div>
-    <StackedBarChart data={financialData} time={timeScale} />
-  </div>
-)}
-</div>
+        <div>Final: {financialData[financialData.length - 1]?.total}</div>
+        {!!financialData.length && (
+          <div>
+            <StackedBarChart data={financialData} time={timeScale} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
 
 export default App;
