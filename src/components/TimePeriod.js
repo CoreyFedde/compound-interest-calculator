@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import "../App.css";
 
-const RangeInput = ({ start, end, period, handleChange, userValues }) => {
-  const { age, retirementTarget, deposit, monthlyContribution, rate } =
-    userValues;
+const RangeInput = ({ start, end, period, handleChange, userValues, validateChange, onEnter, disableStart, disableEnd, }) => {
+  // const { age, retirementTarget, deposit, monthlyContribution, rate } =
+  //   userValues;
+  // console.log('userValues', userValues)
   return (
     <div style={{ margin: "15px auto 25px" }}>
       <div style={{ display: "flex" }}>
         <div>Period {period}</div>{" "}
-        <input type="text" value={start} name="start" onChange={handleChange} />{" "}
-        - <input type="text" value={end} name="end" onChange={handleChange} />
+        <input data-index={period} id={`start-${period}`} type="text" value={start} name="start" onChange={handleChange} onBlur={validateChange} onKeyDown={onEnter} disabled={disableStart}/>{" "}
+        - <input data-index={period} id={`end-${period}`} type="text" value={end} name="end" onChange={handleChange} onBlur={validateChange} onKeyDown={onEnter} disabled={disableEnd} />
       </div>
     </div>
   );
