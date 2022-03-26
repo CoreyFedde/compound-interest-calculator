@@ -55,12 +55,7 @@ function App() {
 
   const timeScale = Array.from({length: investmentYears}, (v, i) => new Date().getFullYear() + i)
 
-const handleUserValueChange = (event) => {
-  setUserValues((values) => ({
-    ...values,
-    [event.target.name]: Number(event.target.value),
-  }));
-}
+const handleSubmitUserValueForm = (formValues) => setUserValues(formValues)
 
 // MOVE THIS TO CHANGE STATE WITHIN COMPONENT AND THEN SUBMIT AFTER CLICKING OFF AN INPUT TO THIS STATE
 const handleTimeRangeChange = e => {
@@ -116,11 +111,12 @@ const shouldShowAddTimeRangeButton = Boolean(lastTimeRange > 1);
 const shouldShowRemoveTimeRangeButton = Boolean(timeRangeValues.length > 1)
 
 console.log('timeranges', timeRangeValues)
+console.log('LATEST USER VALUES', userValues)
 
   return (
     <div style={{display: 'flex'}}>
       <div style={{flex: 1}}>
-        <InfoForm userValues={userValues} handleChange={handleUserValueChange}/>
+        <InfoForm userValues={userValues} handleSubmit={handleSubmitUserValueForm}/>
         {shouldShowAddTimeRangeButton && <button onClick={addTimeRange}>Add Time Period </button>}
         {shouldShowRemoveTimeRangeButton && <button onClick={removeTimeRange}> Remove Time Period</button>}
         ____
