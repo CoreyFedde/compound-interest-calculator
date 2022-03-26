@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import TimePeriod from "./TimePeriod";
 
@@ -8,18 +8,24 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
     userValues;
     const [newTimeRangeValues, setNewTimeRangeValues] = useState(JSON.parse(JSON.stringify(timeRangeValues)));
   
+    useEffect(() => {
+        const cloneArr = JSON.parse(JSON.stringify(newTimeRangeValues));
+        cloneArr[0].start = age;
+        cloneArr[cloneArr.length - 1].end = retirementTarget;
+        setNewTimeRangeValues(cloneArr);
+    }, [age, retirementTarget])
+
+    useEffect(() => {
+        setNewTimeRangeValues(JSON.parse(JSON.stringify(timeRangeValues)))
+    }, [timeRangeValues])
 
     const handleTimeRangeChange = (e) => {
       const { name, value, attributes } = e.target;
       const dataIndex = attributes['data-index'].value;
       const cloneArr = JSON.parse(JSON.stringify(newTimeRangeValues));
       const targetRange = cloneArr[dataIndex - 1];
-      if (name === "start") {
-        targetRange[name] = Number(value);
-      }
-      if (name === "end") {
-        targetRange[name] = Number(value);
-      }
+      targetRange[name] = Number(value);
+      console.log('testing here')
       setNewTimeRangeValues(cloneArr);
     };
     
@@ -77,6 +83,16 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
                 formErrors.push(name);
               }
               break;
+              case "monthlyContribution":
+                if (value > 1000000) {
+                  formErrors.push(name);
+                }
+                break;
+              case "rate":
+                if (value > 100) {
+                  formErrors.push(name);
+                }
+                break;
           }
           if (formErrors.length) {
             e.target.style.borderColor = "red";
@@ -89,7 +105,7 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
                 if (cloneArr.length > 1 && previousRange) {
                     previousRange.end = Number(value) - 1;
                 }
-            } else {
+            } else if (name === "end") {
                 if (cloneArr.length > 1) {
                     cloneArr[targetRangeIndex + 1].start = Number(value) + 1;
                   }
@@ -98,7 +114,7 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
               if (!hasFormErrors(cloneArr)) {
                 e.preventDefault();
                 handleSubmit(cloneArr);
-                e.target.blur();
+                // e.target.blur();
               } else {
                   console.log("THERE BE ERRORS IN HERE")
               }            
@@ -126,22 +142,29 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
         start: previousLastRange.start,
         end: newEnd,
         period: previousLastRange.period,
+        monthlyContribution: previousLastRange.monthlyContribution,
+        rate: previousLastRange.rate,
       },
       {
         start: newStart,
         end: previousLastRange.end,
         period: previousLastRange.period + 1,
+        monthlyContribution: previousLastRange.monthlyContribution,
+        rate: previousLastRange.rate,
       },
     ];
-    return setNewTimeRangeValues(updatedTimeRangeValues);
+    handleSubmit(updatedTimeRangeValues);
   };
   
   const removeTimeRange = (e) => {
       e.preventDefault();
     if (newTimeRangeValues.length === 2) {
-      return setNewTimeRangeValues([
-        { start: age, end: retirementTarget, period: 1 },
-      ]);
+    const previousLastRange = newTimeRangeValues[0];
+    const newArr = [
+        { ...previousLastRange, end: retirementTarget },
+      ]
+      setNewTimeRangeValues(newArr);
+    return handleSubmit(newArr);
     }
     const previousLastRange = newTimeRangeValues[newTimeRangeValues.length - 2];
     const updatedTimeRangeValues = [
@@ -150,15 +173,18 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
         start: previousLastRange.start,
         end: retirementTarget,
         period: previousLastRange.period,
+        monthlyContribution: previousLastRange.monthlyContribution,
+        rate: previousLastRange.rate,
       },
     ];
-    return setNewTimeRangeValues(updatedTimeRangeValues);
+    handleSubmit(updatedTimeRangeValues);
   };
 
   const lastTimeRangeValue = timeRangeValues[timeRangeValues.length - 1];
   const lastTimeRange = lastTimeRangeValue.end - lastTimeRangeValue.start;
   const shouldShowAddTimeRangeButton = Boolean(lastTimeRange > 1);
   const shouldShowRemoveTimeRangeButton = Boolean(newTimeRangeValues.length > 1);
+//   For key, don't use r.start or r.end in key otherwise forces rerender after change
   return (
       <div>
           {shouldShowAddTimeRangeButton && (
@@ -177,10 +203,10 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
                 end={r.end}
                 disableEnd={i === newTimeRangeValues.length - 1}
                 period={r.period}
-                userValues={userValues}
                 handleChange={handleTimeRangeChange}
                 validateChange={validateChange}
                 onEnter={onEnter}
+                {...r}
             />
             ))}
         </form>

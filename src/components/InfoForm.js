@@ -30,18 +30,6 @@ const InfoForm = ({ userValues, handleSubmit }) => {
           formErrors.push(name);
         }
         break;
-      case "monthlyContribution":
-        if (value > 1000000) {
-          formErrors.push(name);
-        }
-        // cannot be more than 1,000,000
-        break;
-      case "rate":
-        if (value > 100) {
-          formErrors.push(name);
-        }
-        // Cannot be more than 100%
-        break;
     }
     if (formErrors.length) {
       console.log(e);
@@ -95,28 +83,6 @@ const InfoForm = ({ userValues, handleSubmit }) => {
           type="text"
           value={deposit}
           name="deposit"
-          onChange={handleChange}
-          onBlur={validateChange}
-          onKeyDown={onEnter}
-        />
-      </div>
-      <div>
-        <label>Monthly Contribution</label>
-        <input
-          type="text"
-          value={monthlyContribution}
-          name="monthlyContribution"
-          onChange={handleChange}
-          onBlur={validateChange}
-          onKeyDown={onEnter}
-        />
-      </div>
-      <div>
-        <label>Expected Rate of Return</label>
-        <input
-          type="text"
-          value={rate}
-          name="rate"
           onChange={handleChange}
           onBlur={validateChange}
           onKeyDown={onEnter}

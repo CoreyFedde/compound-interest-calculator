@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Calculator from "./components/Calculator";
 import InfoForm from "./components/InfoForm";
@@ -10,61 +10,43 @@ import SimpleLineChart from "./components/charts/SimpleLineChart";
 import TimeSlider from "./components/TimeSlider";
 import TimePeriod from "./components/TimePeriod";
 import TimeRangeForm from "./components/TimeRangeForm";
-
-const calculateInterestOverYear = (principal, rate) => {
-  return principal * rate;
-};
-
-const calculateTotalRetirementWithMonthlyContribution = (
-  investmentYears,
-  monthlyContribution,
-  deposit,
-  rate
-) => {
-  const annualContribution = monthlyContribution * 12;
-  const initialInvestment = Number(deposit) + Number(annualContribution);
-  let incrementalAssets = [];
-  for (let i = 0; i < investmentYears; i++) {
-    const previousIncrement = incrementalAssets[i - 1];
-    let principal, interest, total;
-    if (i === 0) {
-      principal = deposit + annualContribution;
-      interest = deposit * rate;
-      total = principal + interest;
-    } else {
-      principal = previousIncrement.principal + annualContribution;
-      interest = calculateInterestOverYear(previousIncrement.total, rate);
-      total = previousIncrement.total + annualContribution + interest;
-    }
-    const newIncrement = {
-      principal: Math.round(principal),
-      interest: Math.round(interest),
-      total: Math.round(total),
-    };
-    incrementalAssets = [...incrementalAssets, newIncrement];
-  }
-  return incrementalAssets;
-};
+import {calculateTotalRetirementWithMonthlyContribution } from './calculations/calcHelper';
 
 function App() {
   const [userValues, setUserValues] = useState({
     age: 30,
     retirementTarget: 67,
     deposit: 100,
-    monthlyContribution: 200,
-    rate: 0.08,
   });
   const [timeRangeValues, setTimeRangeValues] = useState([
-    { start: userValues.age, end: userValues.retirementTarget, period: 1 },
+    { start: userValues.age, end: userValues.retirementTarget, period: 1, monthlyContribution: 200,
+      rate: 0.08, investmentData: calculateTotalRetirementWithMonthlyContribution(Number(userValues.retirementTarget) - Number(userValues.age), 200, userValues.deposit, 0.08)
+    }
   ]);
+  const [financialData, setFinancialData] = useState([])
   const investmentYears = userValues.retirementTarget - userValues.age;
 
-  const financialData = calculateTotalRetirementWithMonthlyContribution(
-    investmentYears,
-    userValues.monthlyContribution,
-    userValues.deposit,
-    userValues.rate
-  );
+  // const financialData = calculateTotalRetirementWithMonthlyContribution(
+  //   investmentYears,
+  //   userValues.monthlyContribution,
+  //   userValues.deposit,
+  //   userValues.rate
+  // );
+
+  useEffect(() => {
+    let initialInvestment = userValues.deposit;
+    let updatedFinancialData = [];
+    timeRangeValues.forEach((r) => {
+      const periodInvestmentYears = Number(r.end) - Number(r.start);
+      const investmentData = calculateTotalRetirementWithMonthlyContribution(periodInvestmentYears, r.monthlyContribution, initialInvestment, r.rate, updatedFinancialData[updatedFinancialData.length - 1]);
+      initialInvestment = investmentData[investmentData.length - 1].total;
+      console.log('investmentData', investmentData);
+      updatedFinancialData = [...updatedFinancialData, ...investmentData];
+    })
+    setFinancialData(updatedFinancialData);
+  }, [timeRangeValues])
+
+  // console.log('financialData', financialData)
 
   const timeScale = Array.from(
     { length: investmentYears },
@@ -74,6 +56,7 @@ function App() {
   const handleSubmitUserValueForm = (formValues) => setUserValues(formValues);
   const handleSubmitTimeRangeValuesForm = (formValues) => setTimeRangeValues(formValues);
 
+  // console.log(timeRangeValues);
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: 1 }}>
@@ -84,15 +67,16 @@ function App() {
         <TimeRangeForm userValues={userValues} timeRangeValues={timeRangeValues} handleSubmit={handleSubmitTimeRangeValuesForm}/>
       </div>
       <div style={{ flex: 1 }}>
-        <div>Final: {financialData[financialData.length - 1]?.total}</div>
-        {!!financialData.length && (
-          <div>
-            <StackedBarChart data={financialData} time={timeScale} />
-          </div>
-        )}
-      </div>
+<div>Final: {financialData[financialData.length - 1]?.total}</div>
+{!!financialData.length && (
+  <div>
+    <StackedBarChart data={financialData} time={timeScale} />
+  </div>
+)}
+</div>
     </div>
   );
 }
+
 
 export default App;
