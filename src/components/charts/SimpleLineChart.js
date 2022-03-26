@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {curveCatmullRom} from 'd3-shape';
+import React, { useState } from "react";
+import { curveCatmullRom } from "d3-shape";
 
 import {
   FlexibleXYPlot,
@@ -9,33 +9,30 @@ import {
   HorizontalGridLines,
   VerticalGridLines,
   LineSeries,
-} from 'react-vis';
+} from "react-vis";
 import "react-vis/dist/style.css";
 
-const SimpleLineChart = ({data, time}) => {
-    const totalData = data.map((f, i) => ({x: time[i], y: f.total}))
-    return (
-      <div>
-        <FlexibleXYPlot height={500}>
-          <HorizontalGridLines />
-          <VerticalGridLines />
-          <XAxis />
-          <YAxis />
-          <ChartLabel 
-            text="X Axis"
-            className="alt-x-label"
-            includeMargin={false}
-            xPercent={0.025}
-            yPercent={1.01}
-            />
-          <LineSeries
-            className="first-series"
-            data={totalData}
-          />
-        </FlexibleXYPlot>
-      </div>
-    );
-}
+const SimpleLineChart = ({ data, time }) => {
+  const totalData = data.map((f, i) => ({ x: time[i], y: f.total }));
+  return (
+    <div>
+      <FlexibleXYPlot height={500}>
+        <HorizontalGridLines />
+        <VerticalGridLines />
+        <XAxis />
+        <YAxis />
+        <ChartLabel
+          text="X Axis"
+          className="alt-x-label"
+          includeMargin={false}
+          xPercent={0.025}
+          yPercent={1.01}
+        />
+        <LineSeries className="first-series" data={totalData} />
+      </FlexibleXYPlot>
+    </div>
+  );
+};
 
 // const SimpleLineChart = () => {
 //     return (
@@ -45,7 +42,7 @@ const SimpleLineChart = ({data, time}) => {
 //           <VerticalGridLines />
 //           <XAxis />
 //           <YAxis />
-//           <ChartLabel 
+//           <ChartLabel
 //             text="X Axis"
 //             className="alt-x-label"
 //             includeMargin={false}
@@ -53,7 +50,7 @@ const SimpleLineChart = ({data, time}) => {
 //             yPercent={1.01}
 //             />
 
-//           <ChartLabel 
+//           <ChartLabel
 //             text="Y Axis"
 //             className="alt-y-label"
 //             includeMargin={false}
