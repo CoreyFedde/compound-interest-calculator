@@ -59,7 +59,7 @@ const RangeInput = ({
         />
       </div>
       <div>
-        <label>Expected Rate of Return</label>
+        <label>Expected Rate of Return in %</label>
         <input
           type="text"
           value={rate}

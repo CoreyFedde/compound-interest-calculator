@@ -9,6 +9,7 @@ export const calculateTotalRetirementWithMonthlyContribution = (
   rate,
   previousData
 ) => {
+  const decimalRate = Number(rate) / 100;
   const annualContribution = monthlyContribution * 12;
   let incrementalAssets = [];
   for (let i = 0; i < investmentYears; i++) {
@@ -19,15 +20,16 @@ export const calculateTotalRetirementWithMonthlyContribution = (
         ? previousData.principal + annualContribution
         : deposit + annualContribution;
       interest = previousData
-        ? calculateInterestOverYear(previousData.total, rate)
-        : deposit * rate;
-      total = previousData
-        ? previousData.total + annualContribution + interest
-        : principal + interest;
+        ? calculateInterestOverYear(previousData.total, decimalRate) +
+          previousData.interest
+        : deposit * decimalRate;
+      total = principal + interest;
     } else {
       principal = previousIncrement.principal + annualContribution;
-      interest = calculateInterestOverYear(previousIncrement.total, rate);
-      total = previousIncrement.total + annualContribution + interest;
+      interest =
+        calculateInterestOverYear(previousIncrement.total, decimalRate) +
+        previousIncrement.interest;
+      total = principal + interest;
     }
     const newIncrement = {
       principal: Math.round(principal),

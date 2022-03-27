@@ -115,18 +115,18 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
       if (name === "start") {
         const previousRange = cloneArr[Number(targetRangeIndex) - 1];
         if (cloneArr.length > 1 && previousRange) {
-          previousRange.end = Number(value) - 1;
+          previousRange.end = Number(value);
         }
       } else if (name === "end") {
         if (cloneArr.length > 1) {
-          cloneArr[targetRangeIndex + 1].start = Number(value) + 1;
+          cloneArr[targetRangeIndex + 1].start = Number(value);
         }
       }
       setNewTimeRangeValues(cloneArr);
       if (!hasFormErrors(cloneArr)) {
         e.preventDefault();
         handleSubmit(cloneArr);
-        // e.target.blur();
+        e.target.blur();
       } else {
         console.log("THERE BE ERRORS IN HERE");
       }
@@ -145,7 +145,6 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
     const currentRange = previousLastRange.end - previousLastRange.start;
     const newRange = currentRange / 2;
     const newEnd = Math.floor(previousLastRange.start + newRange);
-    const newStart = Math.floor(previousLastRange.start + newRange + 1);
     const updatedTimeRangeValues = [
       ...(newTimeRangeValues.length === 1
         ? []
@@ -158,7 +157,7 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
         rate: previousLastRange.rate,
       },
       {
-        start: newStart,
+        start: newEnd,
         end: previousLastRange.end,
         period: previousLastRange.period + 1,
         monthlyContribution: previousLastRange.monthlyContribution,

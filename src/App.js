@@ -12,6 +12,7 @@ import TimePeriod from "./components/TimePeriod";
 import TimeRangeForm from "./components/TimeRangeForm";
 import { calculateTotalRetirementWithMonthlyContribution } from "./calculations/calcHelper";
 
+// DONT GET CONFUSED WE ARE COMPOUNDING ANNUALLY LIKE WE WOULD IN A SAVINGS ACCOUNT SO RAMSEY CALCULATOR MIGHT BE DIFF. NERDWALLET IS OFF BY A COUPLE HUNDRED ONLY
 function App() {
   const [userValues, setUserValues] = useState({
     age: 30,
@@ -24,7 +25,7 @@ function App() {
       end: userValues.retirementTarget,
       period: 1,
       monthlyContribution: 200,
-      rate: 0.08,
+      rate: 8,
       investmentData: calculateTotalRetirementWithMonthlyContribution(
         Number(userValues.retirementTarget) - Number(userValues.age),
         200,
@@ -49,10 +50,10 @@ function App() {
     timeRangeValues.forEach((r) => {
       const periodInvestmentYears = Number(r.end) - Number(r.start);
       const investmentData = calculateTotalRetirementWithMonthlyContribution(
-        periodInvestmentYears,
-        r.monthlyContribution,
-        initialInvestment,
-        r.rate,
+        Number(periodInvestmentYears),
+        Number(r.monthlyContribution),
+        Number(initialInvestment),
+        Number(r.rate),
         updatedFinancialData[updatedFinancialData.length - 1]
       );
       initialInvestment = investmentData[investmentData.length - 1].total;
