@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
+import styled from "styled-components";
 import TimePeriod from "./TimePeriod";
+
+const FormWrapper = styled.div`
+  background: #e6f0ea;
+  margin: 25px 25px;
+`;
+
+const SectionTitle = styled.h3`
+  text-align: center;
+  font-size: 28px;
+`;
 
 const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   const { age, retirementTarget, deposit, monthlyContribution, rate } =
@@ -25,7 +36,7 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
     const dataIndex = attributes["data-index"].value;
     const cloneArr = JSON.parse(JSON.stringify(newTimeRangeValues));
     const targetRange = cloneArr[dataIndex - 1];
-    targetRange[name] = Number(value);
+    targetRange[name] = value;
     setNewTimeRangeValues(cloneArr);
   };
 
@@ -95,20 +106,25 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
         }
         break;
       case "monthlyContribution":
-        if (value > 1000000) {
+        if (value > 1000000 || value < 0) {
           formErrors.push(name);
         }
         break;
       case "rate":
-        if (value > 100) {
+        if (value > 100 || value < 0) {
           formErrors.push(name);
         }
         break;
     }
+    e.target.blur();
     if (formErrors.length) {
       e.target.style.borderColor = "red";
+      if (name === "rate" || name === "monthlyContribution") {
+        e.target.nextSibling.style.borderColor = "red";
+      }
     } else {
       e.target.style.borderColor = "black";
+      e.target.nextSibling.style.borderColor = "black";
       const cloneArr = JSON.parse(JSON.stringify(newTimeRangeValues));
       // @TODO - AUTOFIX THESE FORM VALUES ACROSS THE FORM INSTEAD OF ERRORS
       if (name === "start") {
@@ -125,7 +141,6 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
       if (!hasFormErrors(cloneArr)) {
         e.preventDefault();
         handleSubmit(cloneArr);
-        e.target.blur();
       } else {
         console.log(
           "There are errors in the form that need to be handled before submitting"
@@ -198,7 +213,8 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   );
   //   For key, don't use r.start or r.end in key otherwise forces rerender after change
   return (
-    <div>
+    <FormWrapper>
+      <h3>Investment Periods</h3>
       {shouldShowAddTimeRangeButton && (
         <button onClick={addTimeRange}>Add Time Period </button>
       )}
@@ -221,7 +237,7 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
           />
         ))}
       </form>
-    </div>
+    </FormWrapper>
   );
 };
 

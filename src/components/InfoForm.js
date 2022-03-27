@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import "../App.css";
+import styled from "styled-components";
+import Input from "./forms/Input";
+
+const FormWrapper = styled.div`
+  background: #d9e8e0;
+  margin: 25px 25px;
+`;
+const Form = styled.form``;
+const InputWrapper = styled.div``;
+const Label = styled.label``;
 
 const InfoForm = ({ userValues, handleSubmit }) => {
   const [newUserValues, setNewUserValues] = useState(userValues);
@@ -25,20 +34,20 @@ const InfoForm = ({ userValues, handleSubmit }) => {
         }
         break;
       case "deposit":
-        if (value > 1000000) {
+        if (value > 1000000 || value < 0) {
           formErrors.push(name);
         }
         break;
     }
+    e.target.blur();
     if (formErrors.length) {
       e.target.style.borderColor = "red";
-      e.target.previousSibling.style.color = "red";
+      e.target.nextSibling.style.borderColor = "red";
     } else {
       e.target.style.borderColor = "black";
-      e.target.previousSibling.style.color = "black";
+      e.target.nextSibling.style.borderColor = "black";
       e.preventDefault();
       handleSubmit(newUserValues);
-      e.target.blur();
     }
   };
 
@@ -51,32 +60,31 @@ const InfoForm = ({ userValues, handleSubmit }) => {
   const { age, retirementTarget, deposit, monthlyContribution, rate } =
     newUserValues;
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Current Age: </label>
-        <input
+    <FormWrapper>
+      <form onSubmit={handleSubmit}>
+        <Input
+          label={"Current Age"}
           type="text"
           value={age}
           name="age"
+          unit="years"
           onChange={handleChange}
           onBlur={validateChange}
           onKeyDown={onEnter}
         />
-      </div>
-      <div>
-        <label>Retirement Age: </label>
-        <input
+        <Input
+          label={"Retirement Age"}
           type="text"
           value={retirementTarget}
           name="retirementTarget"
+          unit="years"
           onChange={handleChange}
           onBlur={validateChange}
           onKeyDown={onEnter}
         />
-      </div>
-      <div>
-        <label>Current Investments</label>
-        <input
+        <Input
+          label={"Current Investments"}
+          unit={"$"}
           type="text"
           value={deposit}
           name="deposit"
@@ -84,8 +92,8 @@ const InfoForm = ({ userValues, handleSubmit }) => {
           onBlur={validateChange}
           onKeyDown={onEnter}
         />
-      </div>
-    </form>
+      </form>
+    </FormWrapper>
   );
 };
 

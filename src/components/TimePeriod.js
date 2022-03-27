@@ -1,5 +1,40 @@
-import React, { useState } from "react";
-import "../App.css";
+import React from "react";
+import Input from "./forms/Input";
+import styled from "styled-components";
+
+const PeriodWrapper = styled.div`
+  margin: 15px auto 25px;
+  display: flex;
+  border: 1px solid black;
+  border-radius: 4px;
+`;
+const PeriodNameWrapper = styled.div`
+  width: 60px;
+  position: relative;
+  background: green;
+`;
+const PeriodName = styled.h3`
+  white-space: nowrap;
+  color: white;
+  left: 50%;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  /* Abs positioning makes it not take up vert space */
+  position: absolute;
+  top: 20px;
+  left: 45px;
+
+  /* Border is the new background */
+  background: none;
+
+  /* Rotate from top left corner (not default) */
+  transform-origin: 0 0;
+  transform: rotate(90deg);
+`;
+const PeriodInnerWrapper = styled.div`
+  display: flex;
+`;
+const PeriodFinancialsWrapper = styled.div``;
 
 const RangeInput = ({
   start,
@@ -14,11 +49,16 @@ const RangeInput = ({
   monthlyContribution,
 }) => {
   return (
-    <div style={{ margin: "15px auto 25px" }}>
-      <div style={{ display: "flex" }}>
-        <div style={{ display: "flex" }}>
-          <div>Period {period}</div>{" "}
-          <input
+    <PeriodWrapper>
+      <PeriodNameWrapper>
+        <PeriodName>Period {period}</PeriodName>
+      </PeriodNameWrapper>
+
+      <PeriodInnerWrapper>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Input
+            label="Starting Age"
+            unit="years"
             data-index={period}
             id={`start-${period}`}
             type="text"
@@ -28,9 +68,11 @@ const RangeInput = ({
             onBlur={validateChange}
             onKeyDown={onEnter}
             disabled={disableStart}
-          />{" "}
-          -{" "}
-          <input
+          />
+          <div style={{ lineHeight: "80px", fontSize: "18px" }}>to</div>
+          <Input
+            label="Ending Age"
+            unit="years"
             data-index={period}
             id={`end-${period}`}
             type="text"
@@ -42,10 +84,11 @@ const RangeInput = ({
             disabled={disableEnd}
           />
         </div>
-      </div>
-      <div>
-        <label>Monthly Contribution</label>
-        <input
+      </PeriodInnerWrapper>
+      <PeriodFinancialsWrapper>
+        <Input
+          label="Monthly Contribution"
+          unit="$"
           type="text"
           value={monthlyContribution}
           name="monthlyContribution"
@@ -54,10 +97,9 @@ const RangeInput = ({
           onKeyDown={onEnter}
           data-index={period}
         />
-      </div>
-      <div>
-        <label>Expected Rate of Return in %</label>
-        <input
+        <Input
+          label="Estimated Rate of Return"
+          unit="%"
           type="text"
           value={rate}
           name="rate"
@@ -66,8 +108,8 @@ const RangeInput = ({
           onKeyDown={onEnter}
           data-index={period}
         />
-      </div>
-    </div>
+      </PeriodFinancialsWrapper>
+    </PeriodWrapper>
   );
 };
 

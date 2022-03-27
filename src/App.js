@@ -1,9 +1,36 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import "./App.css";
 import InfoForm from "./components/InfoForm";
 import StackedBarChart from "./components/charts/StackedBarChart";
 import TimeRangeForm from "./components/TimeRangeForm";
 import { calculateTotalRetirementWithMonthlyContribution } from "./calculations/calcHelper";
+
+const TitleWrapper = styled.div`
+  width: 100%;
+  background: #3d405b;
+`;
+const Title = styled.h1`
+  font-size: 50px;
+  color: white;
+  text-align: center;
+  margin: 0;
+`;
+const FormWrapper = styled.div`
+  flex: 1;
+`;
+const DataWrapper = styled.div`
+  flex: 1;
+`;
+const AppWrapper = styled.div`
+  display: flex;
+  background: #f4f1de;
+`;
+
+const Balance = styled.h2`
+  font-size: 35px;
+  text-align: center;
+`;
 
 // DONT GET CONFUSED WE ARE COMPOUNDING ANNUALLY LIKE WE WOULD IN A SAVINGS ACCOUNT SO RAMSEY CALCULATOR MIGHT BE DIFF. NERDWALLET IS OFF BY A COUPLE HUNDRED ONLY
 function App() {
@@ -46,7 +73,7 @@ function App() {
       updatedFinancialData = [...updatedFinancialData, ...investmentData];
     });
     setFinancialData(updatedFinancialData);
-  }, [timeRangeValues]);
+  }, [timeRangeValues, userValues]);
 
   const timeScale = Array.from(
     { length: investmentYears },
@@ -58,26 +85,35 @@ function App() {
     setTimeRangeValues(formValues);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: 1 }}>
-        <InfoForm
-          userValues={userValues}
-          handleSubmit={handleSubmitUserValueForm}
-        />
-        <TimeRangeForm
-          userValues={userValues}
-          timeRangeValues={timeRangeValues}
-          handleSubmit={handleSubmitTimeRangeValuesForm}
-        />
-      </div>
-      <div style={{ flex: 1 }}>
-        <div>Final: {financialData[financialData.length - 1]?.total}</div>
-        {!!financialData.length && (
-          <div>
-            <StackedBarChart data={financialData} time={timeScale} />
-          </div>
-        )}
-      </div>
+    <div>
+      {" "}
+      <TitleWrapper>
+        <Title>Compound Interest Calculator</Title>
+      </TitleWrapper>
+      <AppWrapper>
+        <FormWrapper>
+          <InfoForm
+            userValues={userValues}
+            handleSubmit={handleSubmitUserValueForm}
+          />
+          <TimeRangeForm
+            userValues={userValues}
+            timeRangeValues={timeRangeValues}
+            handleSubmit={handleSubmitTimeRangeValuesForm}
+          />
+        </FormWrapper>
+        <DataWrapper>
+          <Balance>
+            Final Balance: $
+            {financialData[financialData.length - 1]?.total.toLocaleString()}
+          </Balance>
+          {!!financialData.length && (
+            <div>
+              <StackedBarChart data={financialData} time={timeScale} />
+            </div>
+          )}
+        </DataWrapper>
+      </AppWrapper>
     </div>
   );
 }
