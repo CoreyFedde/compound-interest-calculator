@@ -8,7 +8,6 @@ const DonutChart = ({ data }) => {
     { theta: finalDataValues.interest, label: "interest" },
     { theta: finalDataValues.principal, label: "principal" },
   ];
-  console.log("value", value);
   return (
     <RadialChart
       className={"donut-chart-example"}

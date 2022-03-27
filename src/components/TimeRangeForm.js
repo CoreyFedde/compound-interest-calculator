@@ -26,7 +26,6 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
     const cloneArr = JSON.parse(JSON.stringify(newTimeRangeValues));
     const targetRange = cloneArr[dataIndex - 1];
     targetRange[name] = Number(value);
-    console.log("testing here");
     setNewTimeRangeValues(cloneArr);
   };
 
@@ -128,7 +127,9 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
         handleSubmit(cloneArr);
         e.target.blur();
       } else {
-        console.log("THERE BE ERRORS IN HERE");
+        console.log(
+          "There are errors in the form that need to be handled before submitting"
+        );
       }
     }
   };

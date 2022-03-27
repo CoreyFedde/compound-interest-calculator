@@ -25,14 +25,12 @@ const InfoForm = ({ userValues, handleSubmit }) => {
         }
         break;
       case "deposit":
-        // cannot be more than 1,000,000
         if (value > 1000000) {
           formErrors.push(name);
         }
         break;
     }
     if (formErrors.length) {
-      console.log(e);
       e.target.style.borderColor = "red";
       e.target.previousSibling.style.color = "red";
     } else {
@@ -46,7 +44,6 @@ const InfoForm = ({ userValues, handleSubmit }) => {
 
   const onEnter = (e) => {
     if (e.keyCode === 13) {
-      console.log("yo", e);
       handleChange(e);
       validateChange(e);
     }

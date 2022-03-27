@@ -13,9 +13,6 @@ const RangeInput = ({
   rate,
   monthlyContribution,
 }) => {
-  // const { age, retirementTarget, deposit, monthlyContribution, rate } =
-  //   userValues;
-  // console.log('userValues', userValues)
   return (
     <div style={{ margin: "15px auto 25px" }}>
       <div style={{ display: "flex" }}>
