@@ -21,15 +21,33 @@ const FormWrapper = styled.div`
 `;
 const DataWrapper = styled.div`
   flex: 6;
+  width: 100%;
 `;
 const AppWrapper = styled.div`
   display: flex;
   background: #f4f1de;
+  flex-wrap: wrap;
 `;
 
 const Balance = styled.h2`
   font-size: 35px;
   text-align: center;
+`;
+
+const FinancialDetail = styled.h3`
+  font-size: 25px;
+  text-align: center;
+  color: grey;
+`;
+
+const FinancialDetails = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const FinancialNumber = styled.span`
+  font-weight: bold;
+  color: black;
 `;
 
 // DONT GET CONFUSED WE ARE COMPOUNDING ANNUALLY LIKE WE WOULD IN A SAVINGS ACCOUNT SO RAMSEY CALCULATOR MIGHT BE DIFF. NERDWALLET IS OFF BY A COUPLE HUNDRED ONLY
@@ -58,6 +76,36 @@ function App() {
   const investmentYears = userValues.retirementTarget - userValues.age;
 
   useEffect(() => {
+    let newTimeRangeValues = JSON.parse(JSON.stringify(timeRangeValues));
+    const lastCurrentTimeRangeValue =
+      newTimeRangeValues[newTimeRangeValues.length - 1];
+    const secondLastCurrentTimeRangeValue =
+      newTimeRangeValues[newTimeRangeValues.length - 2];
+    const retirementValue = Number(userValues.retirementTarget);
+    if (retirementValue - Number(lastCurrentTimeRangeValue.start) >= 1) {
+      lastCurrentTimeRangeValue.end = userValues.retirementTarget;
+    } else {
+      // if (secondLastCurrentTimeRangeValue && retirementValue - secondLastCurrentTimeRangeValue.start >= 2) {
+      //   lastCurrentTimeRangeValue.end = retirementValue;
+      //   lastCurrentTimeRangeValue.start = retirementValue - 1;
+      //   secondLastCurrentTimeRangeValue.end = retirementValue - 1;
+      // } else if (secondLastCurrentTimeRangeValue) {
+      //   newTimeRangeValues.pop();
+      //   secondLastCurrentTimeRangeValue.end = retirementValue;
+      //   if (secondLastCurrentTimeRangeValue.start = retirementValue) {
+      //     secondLastCurrentTimeRangeValue.start = retirementValue - 1;
+      //   }
+      // } else {
+      //   lastCurrentTimeRangeValue.end = retirementValue;
+      //   lastCurrentTimeRangeValue.start = retirementValue - 1;
+      // }
+      newTimeRangeValues[0].end = retirementValue;
+      newTimeRangeValues = [newTimeRangeValues[0]];
+    }
+    setTimeRangeValues(newTimeRangeValues);
+  }, [userValues]);
+
+  useEffect(() => {
     let initialInvestment = userValues.deposit;
     let updatedFinancialData = [];
     timeRangeValues.forEach((r) => {
@@ -73,7 +121,7 @@ function App() {
       updatedFinancialData = [...updatedFinancialData, ...investmentData];
     });
     setFinancialData(updatedFinancialData);
-  }, [timeRangeValues, userValues]);
+  }, [timeRangeValues]);
 
   const timeScale = Array.from(
     { length: investmentYears },
@@ -86,7 +134,6 @@ function App() {
 
   return (
     <div>
-      {" "}
       <TitleWrapper>
         <Title>Compound Interest Calculator</Title>
       </TitleWrapper>
@@ -104,9 +151,32 @@ function App() {
         </FormWrapper>
         <DataWrapper>
           <Balance>
-            Final Balance: $
-            {financialData[financialData.length - 1]?.total.toLocaleString()}
+            Final Balance:
+            <FinancialNumber>
+              {" "}
+              ${financialData[financialData.length - 1]?.total.toLocaleString()}
+            </FinancialNumber>
           </Balance>
+          <FinancialDetail>
+            Total Principal + Contributions:
+            <FinancialNumber>
+              {" "}
+              $
+              {financialData[
+                financialData.length - 1
+              ]?.principal.toLocaleString()}
+            </FinancialNumber>
+          </FinancialDetail>
+          <FinancialDetail>
+            Total Interest Gained:
+            <FinancialNumber>
+              {" "}
+              $
+              {financialData[
+                financialData.length - 1
+              ]?.interest.toLocaleString()}
+            </FinancialNumber>
+          </FinancialDetail>
           {!!financialData.length && (
             <div>
               <StackedBarChart data={financialData} time={timeScale} />

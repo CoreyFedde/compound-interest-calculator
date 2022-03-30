@@ -4,37 +4,47 @@ import styled from "styled-components";
 
 const PeriodWrapper = styled.div`
   margin: 15px 25px 25px;
-  display: flex;
   border: 1px solid black;
   border-radius: 4px;
 `;
+
+const PeriodOuterInnerWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  background: lightblue;
+`;
 const PeriodNameWrapper = styled.div`
-  width: 60px;
-  position: relative;
-  background: green;
+  // width: 60px;
+  // position: relative;
+  // background: green;
 `;
 const PeriodName = styled.h3`
-  white-space: nowrap;
-  color: white;
-  left: 50%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  /* Abs positioning makes it not take up vert space */
-  position: absolute;
-  top: 20px;
-  left: 45px;
+  padding: 15px;
+  // white-space: nowrap;
+  // color: white;
+  // left: 50%;
+  // letter-spacing: 2px;
+  // text-transform: uppercase;
+  // /* Abs positioning makes it not take up vert space */
+  // position: absolute;
+  // top: 20px;
+  // left: 45px;
 
-  /* Border is the new background */
-  background: none;
+  // /* Border is the new background */
+  // background: none;
 
-  /* Rotate from top left corner (not default) */
-  transform-origin: 0 0;
-  transform: rotate(90deg);
+  // /* Rotate from top left corner (not default) */
+  // transform-origin: 0 0;
+  // transform: rotate(90deg);
 `;
 const PeriodInnerWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
-const PeriodFinancialsWrapper = styled.div``;
+const PeriodFinancialsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
 
 const RangeInput = ({
   start,
@@ -50,12 +60,11 @@ const RangeInput = ({
 }) => {
   return (
     <PeriodWrapper>
-      <PeriodNameWrapper>
-        <PeriodName>Period {period}</PeriodName>
-      </PeriodNameWrapper>
-
-      <PeriodInnerWrapper>
-        <div style={{ display: "flex", alignItems: "center" }}>
+      <PeriodOuterInnerWrapper>
+        <PeriodNameWrapper>
+          <PeriodName>Period {period}</PeriodName>
+        </PeriodNameWrapper>
+        <PeriodInnerWrapper>
           <Input
             label="Starting Age"
             unit="years"
@@ -83,8 +92,8 @@ const RangeInput = ({
             onKeyDown={onEnter}
             disabled={disableEnd}
           />
-        </div>
-      </PeriodInnerWrapper>
+        </PeriodInnerWrapper>
+      </PeriodOuterInnerWrapper>
       <PeriodFinancialsWrapper>
         <Input
           label="Monthly Contribution"

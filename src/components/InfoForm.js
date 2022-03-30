@@ -7,7 +7,8 @@ const FormWrapper = styled.div`
   margin: 25px 25px;
 `;
 const Form = styled.form`
-display: flex;
+  display: flex;
+  flex-wrap: wrap;
 `;
 const SectionTitle = styled.h3`
   text-align: center;

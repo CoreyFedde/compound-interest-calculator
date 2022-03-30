@@ -14,12 +14,13 @@ const SectionTitle = styled.h3`
 `;
 
 const Button = styled.button`
-    height: 40px;
-    margin: auto 15px;
-    background-color: ${props => props.type === 'remove' ? '#E07A5F' : '#F2CC8F'};
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
+  height: 40px;
+  margin: auto 15px;
+  background-color: ${(props) =>
+    props.type === "remove" ? "#E07A5F" : "#F2CC8F"};
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
 `;
 
 const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
@@ -37,7 +38,8 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   }, [age, retirementTarget]);
 
   useEffect(() => {
-    setNewTimeRangeValues(JSON.parse(JSON.stringify(timeRangeValues)));
+    const newTimeRangeValues = JSON.parse(JSON.stringify(timeRangeValues));
+    setNewTimeRangeValues(newTimeRangeValues);
   }, [timeRangeValues]);
 
   const handleTimeRangeChange = (e) => {
@@ -224,17 +226,23 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   return (
     <FormWrapper>
       <SectionTitle>Investment Periods</SectionTitle>
-      <div style={{display: 'flex', justifyContent: 'end'}}>
-      {shouldShowRemoveTimeRangeButton && (
-            <Button onClick={removeTimeRange} type="remove"> Remove Time Period</Button>
+      <div style={{ display: "flex", justifyContent: "end" }}>
+        {shouldShowRemoveTimeRangeButton && (
+          <Button onClick={removeTimeRange} type="remove">
+            {" "}
+            Remove Time Period
+          </Button>
         )}
         {shouldShowAddTimeRangeButton && (
-            <Button onClick={addTimeRange} type="add">Add Time Period </Button>
+          <Button onClick={addTimeRange} type="add">
+            Add Time Period{" "}
+          </Button>
         )}
       </div>
       <form>
         {newTimeRangeValues.map((r, i) => (
           <TimePeriod
+            key={`key-${i}`}
             start={r.start}
             disableStart={i === 0}
             end={r.end}
