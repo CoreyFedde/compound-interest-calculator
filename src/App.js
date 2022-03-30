@@ -17,10 +17,10 @@ const Title = styled.h1`
   margin: 0;
 `;
 const FormWrapper = styled.div`
-  flex: 1;
+  flex: 4;
 `;
 const DataWrapper = styled.div`
-  flex: 1;
+  flex: 6;
 `;
 const AppWrapper = styled.div`
   display: flex;

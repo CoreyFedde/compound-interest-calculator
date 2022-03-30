@@ -13,6 +13,15 @@ const SectionTitle = styled.h3`
   font-size: 28px;
 `;
 
+const Button = styled.button`
+    height: 40px;
+    margin: auto 15px;
+    background-color: ${props => props.type === 'remove' ? '#E07A5F' : '#F2CC8F'};
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+`;
+
 const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   const { age, retirementTarget, deposit, monthlyContribution, rate } =
     userValues;
@@ -214,14 +223,15 @@ const TimeRangeForm = ({ timeRangeValues, userValues, handleSubmit }) => {
   //   For key, don't use r.start or r.end in key otherwise forces rerender after change
   return (
     <FormWrapper>
-      <h3>Investment Periods</h3>
-      {shouldShowAddTimeRangeButton && (
-        <button onClick={addTimeRange}>Add Time Period </button>
-      )}
+      <SectionTitle>Investment Periods</SectionTitle>
+      <div style={{display: 'flex', justifyContent: 'end'}}>
       {shouldShowRemoveTimeRangeButton && (
-        <button onClick={removeTimeRange}> Remove Time Period</button>
-      )}
-      ____
+            <Button onClick={removeTimeRange} type="remove"> Remove Time Period</Button>
+        )}
+        {shouldShowAddTimeRangeButton && (
+            <Button onClick={addTimeRange} type="add">Add Time Period </Button>
+        )}
+      </div>
       <form>
         {newTimeRangeValues.map((r, i) => (
           <TimePeriod

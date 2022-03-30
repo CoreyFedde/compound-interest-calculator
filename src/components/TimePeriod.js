@@ -3,7 +3,7 @@ import Input from "./forms/Input";
 import styled from "styled-components";
 
 const PeriodWrapper = styled.div`
-  margin: 15px auto 25px;
+  margin: 15px 25px 25px;
   display: flex;
   border: 1px solid black;
   border-radius: 4px;

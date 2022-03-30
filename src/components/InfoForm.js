@@ -6,7 +6,13 @@ const FormWrapper = styled.div`
   background: #d9e8e0;
   margin: 25px 25px;
 `;
-const Form = styled.form``;
+const Form = styled.form`
+display: flex;
+`;
+const SectionTitle = styled.h3`
+  text-align: center;
+  font-size: 28px;
+`;
 const InputWrapper = styled.div``;
 const Label = styled.label``;
 
@@ -61,7 +67,8 @@ const InfoForm = ({ userValues, handleSubmit }) => {
     newUserValues;
   return (
     <FormWrapper>
-      <form onSubmit={handleSubmit}>
+      <SectionTitle>General Information</SectionTitle>
+      <Form onSubmit={handleSubmit}>
         <Input
           label={"Current Age"}
           type="text"
@@ -92,7 +99,7 @@ const InfoForm = ({ userValues, handleSubmit }) => {
           onBlur={validateChange}
           onKeyDown={onEnter}
         />
-      </form>
+      </Form>
     </FormWrapper>
   );
 };
