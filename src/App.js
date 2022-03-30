@@ -79,8 +79,6 @@ function App() {
     let newTimeRangeValues = JSON.parse(JSON.stringify(timeRangeValues));
     const lastCurrentTimeRangeValue =
       newTimeRangeValues[newTimeRangeValues.length - 1];
-    const secondLastCurrentTimeRangeValue =
-      newTimeRangeValues[newTimeRangeValues.length - 2];
     const retirementValue = Number(userValues.retirementTarget);
     if (retirementValue - Number(lastCurrentTimeRangeValue.start) >= 1) {
       lastCurrentTimeRangeValue.end = userValues.retirementTarget;
@@ -103,21 +101,47 @@ function App() {
       newTimeRangeValues = [newTimeRangeValues[0]];
     }
     setTimeRangeValues(newTimeRangeValues);
-  }, [userValues]);
+  }, [userValues.retirementTarget]);
+
+  useEffect(() => {
+    let newTimeRangeValues = JSON.parse(JSON.stringify(timeRangeValues));
+    const firstTimeRangeValue = newTimeRangeValues[0];
+    const newAge = Number(userValues.age);
+    if (Number(firstTimeRangeValue.end) - Number(newAge) >= 1) {
+      firstTimeRangeValue.start = Number(userValues.age);
+    } else {
+      firstTimeRangeValue.start = Number(userValues.age);
+      firstTimeRangeValue.end = Number(userValues.retirementTarget);
+      newTimeRangeValues = [firstTimeRangeValue];
+    }
+    setTimeRangeValues(newTimeRangeValues);
+  }, [userValues.age]);
+
+  useEffect(() => {
+    let newTimeRangeValues = JSON.parse(JSON.stringify(timeRangeValues));
+    const firstTimeRangeValue = newTimeRangeValues[0];
+    firstTimeRangeValue.deposit = userValues.deposit;
+    setTimeRangeValues(newTimeRangeValues);
+  }, [userValues.deposit]);
 
   useEffect(() => {
     let initialInvestment = userValues.deposit;
     let updatedFinancialData = [];
     timeRangeValues.forEach((r) => {
       const periodInvestmentYears = Number(r.end) - Number(r.start);
-      const investmentData = calculateTotalRetirementWithMonthlyContribution(
-        Number(periodInvestmentYears),
-        Number(r.monthlyContribution),
-        Number(initialInvestment),
-        Number(r.rate),
-        updatedFinancialData[updatedFinancialData.length - 1]
-      );
-      initialInvestment = investmentData[investmentData.length - 1].total;
+      const investmentData =
+        periodInvestmentYears < 1
+          ? []
+          : calculateTotalRetirementWithMonthlyContribution(
+              Number(periodInvestmentYears),
+              Number(r.monthlyContribution),
+              Number(initialInvestment),
+              Number(r.rate),
+              updatedFinancialData[updatedFinancialData.length - 1]
+            );
+      initialInvestment = investmentData.length
+        ? investmentData[investmentData.length - 1].total
+        : 0;
       updatedFinancialData = [...updatedFinancialData, ...investmentData];
     });
     setFinancialData(updatedFinancialData);
